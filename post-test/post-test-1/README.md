@@ -131,7 +131,7 @@ Saat dijalankan, program akan mencetak output berurutan sesuai tahapan berikut:
 praktikum-pbo/
 ├── kelas/
 └── post-test/
-└── post-test-1/
-├── 2509106020-MuhammadZakiFahriansyah-PT-1.py   # Program utama
-└── README.md                                    # Dokumentasi ini
+    └── post-test-1/
+        ├── 2509106020-MuhammadZakiFahriansyah-PT-1.py   # Program utama
+        └── README.md                                    # Dokumentasi post-test 1
 ```
