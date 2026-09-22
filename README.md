@@ -2,6 +2,10 @@
 
 # Sistem Informasi Gizi
 
+**Nama:** [Muhammad Zaki Fahriansyah]  
+**NIM:** [2509106020]  
+**Kelas:** [A1'25]
+
 Post-test Praktikum Pemrograman Berorientasi Objek — mengimplementasikan konsep
 **Class & Object**, **Atribut & Method** (instance, class, static), serta
 **Encapsulation & Property** pada studi kasus sebuah klinik gizi.
@@ -89,7 +93,9 @@ mengekspos nilai aslinya ke luar class.
 ## Cara Menjalankan Program
 
 ```bash
-python3 sistem_informasi_gizi.py
+python 2509106020-MuhammadZakiFahriansyah-PT-1.py
+# atau (untuk pengguna Linux/macOS):
+python3 2509106020-MuhammadZakiFahriansyah-PT-1.py
 ```
 
 Seluruh proses pembuatan objek, pemanggilan method, dan pengujian setter sudah
@@ -122,6 +128,10 @@ Saat dijalankan, program akan mencetak output berurutan sesuai tahapan berikut:
 
 ```
 .
-├── sistem_informasi_gizi.py   # Program utama
-└── README.md                  # Dokumentasi ini
+praktikum-pbo/
+├── kelas/
+└── post-test/
+└── post-test-1/
+├── 2509106020-MuhammadZakiFahriansyah-PT-1.py   # Program utama
+└── README.md                                    # Dokumentasi ini
 ```
