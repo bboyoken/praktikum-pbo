@@ -2,8 +2,8 @@
 
 # Sistem Informasi Gizi
 
-**Nama:** [Muhammad Zaki Fahriansyah]  
-**NIM:** [2509106020]  
+**Nama:** [Muhammad Zaki Fahriansyah]
+**NIM:** [2509106020]
 **Kelas:** [A1'25]
 
 Post-test Praktikum Pemrograman Berorientasi Objek — mengimplementasikan konsep
