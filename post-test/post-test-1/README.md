@@ -18,14 +18,6 @@ inheritance) dan saling berinteraksi melalui objek — misalnya `AhliGizi`
 menerima objek `Pasien` dan `MenuDiet` untuk membuat rekomendasi, sedangkan
 `CatatanKesehatan` menyimpan objek `Pasien` sebagai salah satu atributnya.
 
-> **Catatan desain:** Inheritance dan abstract class sengaja tidak dipakai
-> karena tidak diwajibkan pada ketentuan post-test (class boleh berdiri
-> sendiri/berinteraksi) dan belum dibahas pada tiga modul acuan (Class &
-> Object, Atribut & Method, Encapsulation). Sebagai gantinya, perilaku
-> `hitung_kebutuhan_kalori()` yang berbeda-beda per kategori pasien (reguler,
-> atlet, kondisi medis) tetap diimplementasikan langsung di dalam class
-> `Pasien` menggunakan percabangan kondisi.
-
 ## Struktur Class
 
 ### 1. `Pasien`
