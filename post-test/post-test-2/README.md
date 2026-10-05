@@ -148,33 +148,35 @@ python 2509106020-MuhammadZakiFahriansyah-PT-1.py
 # atau (untuk pengguna Linux/macOS):
 python3 2509106020-MuhammadZakiFahriansyah-PT-1.py
 ```
-Seluruh proses pembuatan objek, pemanggilan method, dan pengujian setter otomatis dijalankan di bagian if __name__ == "__main__": tanpa memerlukan input manual.
+Seluruh proses pembuatan objek, pemanggilan method, dan pengujian setter otomatis dijalankan di bagian `if __name__ `== `"__main__"`: tanpa memerlukan input manual.
 
 ---
 
-## Cuplikan Output Pengujian (Terminal)
+### Cuplikan Output Pengujian (Terminal)
+
+```text
 ============================================================
 SISTEM INFORMASI GIZI - DEMONSTRASI PROGRAM
 ============================================================
 
-[1] Membuat objek Pasien & Uji Overriding
+[1] Membuat objek Pasien
 --- Profil Pasien: Dimas (P001) ---
 Kategori     : reguler
 Berat Badan  : 70 kg
 Tinggi Badan : 170 cm
 Riwayat      : Tidak ada
+Klinik       : Klinik Gizi Sehat Samarinda
 
-[4] Uji Relasi Asosiasi (buat_rekomendasi)
+[2] Membuat objek AhliGizi
+--- Profil Ahli Gizi: dr. Sari (A001) ---
+Spesialisasi : gizi_klinik
+Nomor STR    : STR12345
+
+[3] Rekomendasi Menu
 Kebutuhan kalori Dimas (reguler): 2310 kkal/hari
 --- Rekomendasi dari dr. Sari (gizi_klinik) ---
 Menu 'Nasi Merah + Ayam Panggang' (550 kkal) SESUAI untuk Dimas.
-
-[5] Uji Relasi Agregasi (Pasien & MenuDiet)
-Menu Nasi Merah + Ayam Panggang ditambahkan ke daftar Dimas.
-
-[9] Uji Inheritance (Akses Method Superclass - Private Data)
-Password 'pass123' untuk Dimas benar? True
-
+```
 ---
 
 ## Struktur Repositori
