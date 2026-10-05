@@ -155,16 +155,21 @@ Seluruh proses pembuatan objek, pemanggilan method, dan pengujian setter otomati
 ### Cuplikan Output Pengujian (Terminal)
 
 ```text
-============================================================
 SISTEM INFORMASI GIZI - DEMONSTRASI PROGRAM
 ============================================================
 
-[1] Membuat objek Pasien
+[1] Membuat objek Pasien & Uji Overriding
 --- Profil Pasien: Dimas (P001) ---
 Kategori     : reguler
 Berat Badan  : 70 kg
 Tinggi Badan : 170 cm
 Riwayat      : Tidak ada
+Klinik       : Klinik Gizi Sehat Samarinda
+--- Profil Pasien: Rina (P002) ---
+Kategori     : kondisi_medis
+Berat Badan  : 55 kg
+Tinggi Badan : 160 cm
+Riwayat      : Diabetes
 Klinik       : Klinik Gizi Sehat Samarinda
 
 [2] Membuat objek AhliGizi
@@ -172,10 +177,38 @@ Klinik       : Klinik Gizi Sehat Samarinda
 Spesialisasi : gizi_klinik
 Nomor STR    : STR12345
 
-[3] Rekomendasi Menu
+[3] Membuat objek MenuDiet
+
+[4] Uji Relasi Asosiasi (buat_rekomendasi)
+Kebutuhan kalori Dimas (reguler): 2310 kkal/hari
 Kebutuhan kalori Dimas (reguler): 2310 kkal/hari
 --- Rekomendasi dari dr. Sari (gizi_klinik) ---
 Menu 'Nasi Merah + Ayam Panggang' (550 kkal) SESUAI untuk Dimas.
+
+[5] Uji Relasi Agregasi (Pasien & MenuDiet)
+Menu Nasi Merah + Ayam Panggang ditambahkan ke daftar Dimas.
+Menu Oatmeal Buah ditambahkan ke daftar Dimas.
+
+[6] Uji Relasi Komposisi (Pasien & CatatanKesehatan)
+Catatan kesehatan Dimas pada 01-09-2026 berhasil dibuat.
+--- Catatan Kesehatan: Dimas (01-09-2026) ---
+Berat Badan Tercatat : 70 kg
+Catatan Tambahan     : Kondisi stabil
+
+[7] Uji Class & Static Method
+Total pasien terdaftar    : 2
+Validasi kategori 'atlet' : True
+
+[8] Uji Setter (Encapsulation)
+Berat badan Dimas setelah diubah: 72 kg
+[Gagal] Berat badan Dimas tidak valid: harus lebih dari 0.
+
+[9] Uji Inheritance (Akses Method Superclass - Private Data)
+Password 'pass123' untuk Dimas benar? True
+
+============================================================
+DEMONSTRASI SELESAI
+============================================================
 ```
 ---
 
