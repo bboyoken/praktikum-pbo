@@ -8,53 +8,77 @@ Post-test Praktikum Pemrograman Berorientasi Objek — mengimplementasikan konse
 
 ## Deskripsi Program
 
-Program ini mengelola data pasien, ahli gizi, menu diet, dan catatan kesehatan pada sebuah klinik gizi. Setiap class saling berinteraksi melalui objek — misalnya `AhliGizi` menerima objek `Pasien` dan `MenuDiet` untuk membuat rekomendasi, sedangkan `CatatanKesehatan` menyimpan objek `Pasien` sebagai salah satu atributnya. 
-
-*Catatan: Pada Post-test 4, program ini telah diperbarui dari yang awalnya berdiri sendiri menjadi menggunakan konsep Pewarisan (Inheritance) dan Relasi antar Class (Asosiasi, Agregasi, dan Komposisi).*
+Program ini mengelola data pasien, ahli gizi, menu diet, dan catatan kesehatan
+pada sebuah klinik gizi. Setiap class berdiri sendiri (tidak menggunakan
+inheritance) dan saling berinteraksi melalui objek — misalnya `AhliGizi`
+menerima objek `Pasien` dan `MenuDiet` untuk membuat rekomendasi, sedangkan
+`CatatanKesehatan` menyimpan objek `Pasien` sebagai salah satu atributnya.
 
 ---
 
 ## Struktur Class
 
-### 1. `Pengguna` (Superclass)
-Class induk untuk entitas pengguna sistem (Pasien dan Ahli Gizi).
-- **Atribut public**: `nama`
-- **Atribut protected**: `_id_pengguna`
-- **Atribut private**: `__password`
-- **Method**: `verifikasi_password()`, `tampilkan_profil()`
-
-### 2. `Pasien` (Subclass dari `Pengguna`)
+### 1. `Pasien`
 Menyimpan data pasien klinik gizi.
+
 - **Atribut kelas**: `nama_klinik`, `total_pasien`, `kategori_valid`
-- **Atribut public**: `kategori`
-- **Atribut protected**: `_riwayat_penyakit`
-- **Atribut private**: `__berat_badan`, `__tinggi_badan`
+- **Atribut public**: `id_pasien`, `nama`, `kategori`
+- **Atribut private**: `__password`, `__berat_badan`, `__tinggi_badan`, `__riwayat_penyakit`
 - **Property (getter/setter)**: `berat_badan`, `tinggi_badan`, `riwayat_penyakit`
-- **Wadah Relasi**: `menu_diet_harian` (List), `riwayat_catatan` (List)
-- **Method Overriding**: `tampilkan_profil()`
-- **Method Relasi**: `tambah_menu_harian()` (Agregasi), `catat_kesehatan()` (Komposisi)
+  - Validasi: berat/tinggi badan harus > 0, riwayat penyakit tidak boleh kosong
+- **Instance method**: `hitung_kebutuhan_kalori()`, `tampilkan_profil()`, `verifikasi_password()`
+- **Class method**: `dari_dict()` (factory method), `ganti_nama_klinik()`
+- **Static method**: `validasi_kategori()`
 
-### 3. `AhliGizi` (Subclass dari `Pengguna`)
+### 2. `AhliGizi`
 Menyimpan data ahli gizi yang bertugas di klinik.
-- **Atribut kelas**: `total_ahli_gizi`, `spesialisasi_valid`
-- **Atribut public**: `spesialisasi`
-- **Atribut protected**: `_nomor_str`
-- **Method Overriding**: `tampilkan_profil()`
-- **Method Relasi**: `buat_rekomendasi()` (Asosiasi)
 
-### 4. `MenuDiet`
+- **Atribut kelas**: `total_ahli_gizi`, `spesialisasi_valid`
+- **Atribut public**: `id_ahli`, `nama`, `spesialisasi`
+- **Atribut private**: `__password`, `__nomor_str`
+- **Property (getter/setter)**: `nomor_str`
+  - Validasi: minimal 6 karakter dan tidak boleh kosong
+- **Instance method**: `buat_rekomendasi()` (menerima objek `Pasien` dan `MenuDiet`), `verifikasi_password()`
+- **Class method**: `dari_dict()` (factory method)
+- **Static method**: `validasi_spesialisasi()`
+
+### 3. `MenuDiet`
 Menyimpan data menu diet yang disusun oleh ahli gizi.
+
+- **Atribut kelas**: `total_menu`, `kategori_menu_valid`
 - **Atribut public**: `nama_menu`, `daftar_bahan`, `kategori_menu`
 - **Atribut private**: `__kalori`
 - **Property (getter/setter)**: `kalori`
-- **Method**: `tampilkan_menu()`
+  - Validasi: harus berupa angka dan lebih dari 0
+- **Instance method**: `tampilkan_menu()`
+- **Class method**: `dari_dict()` (factory method)
+- **Static method**: `validasi_kalori()`
 
-### 5. `CatatanKesehatan`
-Mencatat riwayat pemeriksaan kesehatan seorang pasien.
-- **Atribut public**: `pasien`, `tanggal`, `catatan_tambahan`
+### 4. `CatatanKesehatan`
+Mencatat riwayat pemeriksaan kesehatan seorang pasien pada kunjungan tertentu.
+
+- **Atribut kelas**: `total_catatan`, `format_tanggal`
+- **Atribut public**: `pasien` (objek `Pasien`), `tanggal`, `catatan_tambahan`
 - **Atribut private**: `__berat_badan_tercatat`
 - **Property (getter/setter)**: `berat_badan_tercatat`
-- **Method**: `tampilkan_catatan()`
+  - Validasi: harus > 0
+- **Instance method**: `tampilkan_catatan()`
+- **Class method**: `rekap_total()`
+- **Static method**: `validasi_format_tanggal()`
+
+## Penerapan Encapsulation
+
+Semua data fisik/medis dan data sensitif (berat badan, tinggi badan, riwayat
+penyakit, password, nomor STR, kalori menu) disimpan sebagai atribut **private**
+(`__nama_atribut`) dan hanya dapat diakses/diubah melalui **getter** (`@property`)
+dan **setter** (`@nama_properti.setter`) yang sudah dilengkapi validasi. Jika
+data yang dimasukkan tidak valid (misalnya angka negatif atau string kosong),
+setter akan menolak perubahan dan mencetak pesan peringatan, sehingga nilai
+lama tetap dipertahankan.
+
+Password tidak diberi getter sama sekali — hanya bisa diperiksa lewat method
+`verifikasi_password()` yang mengembalikan `True`/`False`, tanpa pernah
+mengekspos nilai aslinya ke luar class.
 
 ---
 
@@ -117,27 +141,44 @@ classDiagram
 
 ---
 
-## Penerapan Inheritance / Pewarisan
-Untuk menghindari pengulangan deklarasi atribut dasar pengguna, diterapkan konsep Pewarisan:
-1. Superclass & Subclass: Dibuat class induk bernama Pengguna. Class Pasien dan AhliGizi bertindak sebagai Subclass.
-2. Penggunaan super(): Konstruktor pada Pasien dan AhliGizi menggunakan fungsi super().__init__(id_pengguna, nama, password) untuk memanggil dan menginisialisasi atribut inti dari superclass.
-3. Atribut Spesifik Subclass: Pasien memiliki atribut tambahan medis (kategori, berat_badan, dsb), sedangkan AhliGizi memiliki atribut profesi (spesialisasi, nomor_str).
-4. Method Overriding: Method tampilkan_profil() yang mulanya di-deklarasikan secara abstrak pada class Pengguna, di-override dan didefinisikan ulang logikanya pada subclass.
-5. Akses Protected & Private:
-   - Protected (_): Atribut _id_pengguna dan _riwayat_penyakit dapat dimanipulasi oleh subclass.
-   - Private (__): Atribut __password di superclass dikunci agar tidak terekspos ke subclass, hanya bisa divalidasi lewat internal method verifikasi_password().
+### 1. Relasi UML
 
-## Penerapan Relasi UML
-Program ini mengimplementasikan tiga jenis relasi struktural antar objek sesuai kaidah UML:
-1. Asosiasi (Association)
-   Diimplementasikan pada method buat_rekomendasi(self, pasien, menu) dalam class AhliGizi. Class ini berinteraksi dengan objek Pasien dan MenuDiet secara independen tanpa kepemilikan mutlak.
-2. Agregasi (Aggregation)
-   Diimplementasikan pada method tambah_menu_harian() dalam class Pasien. Objek MenuDiet dibuat secara mandiri di luar, lalu dimasukkan ke dalam atribut list Pasien. Jika objek Pasien dihapus, data menu diet tetap ada.
-3. Komposisi (Composition)
-   Diimplementasikan pada method catat_kesehatan() dalam class Pasien. Objek CatatanKesehatan diinisialisasi secara mutlak di dalam internal method milik Pasien sehingga sangat bergantung (dependen) pada eksistensi induknya.
+| Relasi | Kata Kunci | Lokasi di Program | Penjelasan |
+|---|---|---|---|
+| **Asosiasi** | "menggunakan" | `AhliGizi.buat_rekomendasi(pasien, menu)` | Objek `Pasien` dan `MenuDiet` diterima sebagai parameter method, dipakai sementara untuk menyusun rekomendasi, dan tidak pernah disimpan sebagai atribut permanen milik `AhliGizi`. |
+| **Agregasi** | "memiliki" | `AhliGizi._daftar_pasien_binaan` + `tambah_pasien_binaan()` / `tampilkan_pasien_binaan()` | Objek `Pasien` dibuat **di luar** `AhliGizi`, lalu didaftarkan ke dalam list `_daftar_pasien_binaan`. Jika objek `AhliGizi` dihapus, objek `Pasien` tetap ada secara independen (tidak ikut musnah). |
+| **Komposisi** | "terdiri dari" | `Pasien._riwayat_kesehatan` + `catat_riwayat_kesehatan()` / `tampilkan_riwayat_kesehatan()` | Objek `CatatanKesehatan` dibuat **langsung di dalam** method milik `Pasien` (bukan dibuat lalu dikirim dari luar). Siklus hidup catatan menyatu dengan `Pasien` pemiliknya. |
 
-## Penerapan Encapsulation
-Semua data medis dan data sensitif disimpan sebagai atribut private (__nama_atribut) dan hanya dapat diakses/diubah melalui getter (@property) dan setter (@nama_properti.setter) yang dilengkapi validasi. Jika input salah (misal: negatif), setter menolak perubahan sehingga nilai lama tetap aman. Password tidak memiliki getter dan hanya divalidasi mengembalikan nilai Boolean True/False.
+### 2. Inheritance
+
+Ditambahkan superclass baru **`User`** yang menaungi dua subclass: **`Pasien`**
+dan **`AhliGizi`**. Keduanya lolos uji *is-a* ("Pasien adalah User", "AhliGizi
+adalah User"), sehingga inheritance memang relasi yang tepat digunakan di sini.
+
+**Superclass `User`**
+- Atribut public: `nama`
+- Atribut protected: `_status_aktif` — sengaja dibuat protected (bukan private)
+  karena subclass (`Pasien`) perlu membacanya langsung di method `info_dasar()`.
+- Atribut private: `__password` — benar-benar rahasia/eksklusif milik `User`,
+  hanya bisa diverifikasi lewat method `verifikasi_password()`, tidak bisa
+  diakses langsung oleh subclass maupun dari luar class.
+- Method: `verifikasi_password()`, `nonaktifkan_akun()`, `info_dasar()`
+
+**Subclass `Pasien(User)`**
+- Memanggil `super().__init__(nama, password)` di dalam `__init__`.
+- Atribut spesifik/unik: `berat_badan`, `tinggi_badan`, `riwayat_penyakit`,
+  `kategori`, serta `_riwayat_kesehatan` (komposisi).
+- **Method overriding**: `info_dasar()` ditulis ulang untuk menampilkan
+  kategori pasien sekaligus status akun, sambil mengakses atribut protected
+  `_status_aktif` milik `User` secara langsung.
+
+**Subclass `AhliGizi(User)`**
+- Memanggil `super().__init__(nama, password)` di dalam `__init__`.
+- Atribut spesifik/unik: `spesialisasi`, `nomor_str`, serta
+  `_daftar_pasien_binaan` (agregasi).
+- **Method overriding**: `nonaktifkan_akun()` ditulis ulang — selain
+  menjalankan perilaku bawaan `User` lewat `super().nonaktifkan_akun()`,
+  method ini juga melepas seluruh pasien binaan milik ahli gizi tersebut.
 
 ---
 
@@ -155,10 +196,11 @@ Seluruh proses pembuatan objek, pemanggilan method, dan pengujian setter otomati
 ### Cuplikan Output Pengujian (Terminal)
 
 ```text
+============================================================
 SISTEM INFORMASI GIZI - DEMONSTRASI PROGRAM
 ============================================================
 
-[1] Membuat objek Pasien & Uji Overriding
+[1] Membuat objek Pasien
 --- Profil Pasien: Dimas (P001) ---
 Kategori     : reguler
 Berat Badan  : 70 kg
@@ -176,35 +218,94 @@ Klinik       : Klinik Gizi Sehat Samarinda
 --- Profil Ahli Gizi: dr. Sari (A001) ---
 Spesialisasi : gizi_klinik
 Nomor STR    : STR12345
+--- Profil Ahli Gizi: dr. Budi (A002) ---
+Spesialisasi : gizi_olahraga
+Nomor STR    : STR67890
 
 [3] Membuat objek MenuDiet
+--- Menu: Nasi Merah + Ayam Panggang (makan_siang) ---
+Bahan  : nasi merah, ayam, brokoli
+Kalori : 550 kkal
+--- Menu: Oatmeal Buah (sarapan) ---
+Bahan  : oatmeal, pisang, madu
+Kalori : 300 kkal
 
-[4] Uji Relasi Asosiasi (buat_rekomendasi)
+[4] Uji Instance Method: hitung_kebutuhan_kalori()
 Kebutuhan kalori Dimas (reguler): 2310 kkal/hari
+Kebutuhan kalori Rina (kondisi_medis): 1584 kkal/hari
+Kebutuhan kalori Andi (atlet): 3264 kkal/hari
+
 Kebutuhan kalori Dimas (reguler): 2310 kkal/hari
 --- Rekomendasi dari dr. Sari (gizi_klinik) ---
 Menu 'Nasi Merah + Ayam Panggang' (550 kkal) SESUAI untuk Dimas.
+Kebutuhan kalori Rina (kondisi_medis): 1584 kkal/hari
+--- Rekomendasi dari dr. Budi (gizi_olahraga) ---
+Menu 'Oatmeal Buah' (300 kkal) SESUAI untuk Rina.
 
-[5] Uji Relasi Agregasi (Pasien & MenuDiet)
-Menu Nasi Merah + Ayam Panggang ditambahkan ke daftar Dimas.
-Menu Oatmeal Buah ditambahkan ke daftar Dimas.
-
-[6] Uji Relasi Komposisi (Pasien & CatatanKesehatan)
-Catatan kesehatan Dimas pada 01-09-2026 berhasil dibuat.
+[5] Membuat objek CatatanKesehatan
 --- Catatan Kesehatan: Dimas (01-09-2026) ---
 Berat Badan Tercatat : 70 kg
 Catatan Tambahan     : Kondisi stabil
+--- Catatan Kesehatan: Rina (05-09-2026) ---
+Berat Badan Tercatat : 54 kg
+Catatan Tambahan     : Berat turun 1 kg
 
-[7] Uji Class & Static Method
-Total pasien terdaftar    : 2
-Validasi kategori 'atlet' : True
+[6] Uji Class Method
+Nama klinik terbaru       : Klinik Gizi Sehat Cabang Samarinda Seberang
+Total pasien terdaftar    : 3
+Total ahli gizi terdaftar : 2
+Total menu dibuat         : 2
+Total catatan kesehatan tercatat: 2
 
-[8] Uji Setter (Encapsulation)
+[7] Uji Static Method
+Validasi kategori 'atlet'         : True
+Validasi kategori 'ngasal'        : False
+Validasi spesialisasi 'gizi_anak' : True
+Validasi kalori 500               : True
+Validasi kalori -20               : False
+Validasi tanggal '01-09-2026'      : True
+
+[8] Uji Setter (Encapsulation & Validasi)
+-- Data valid --
 Berat badan Dimas setelah diubah: 72 kg
+Kalori menu 'Nasi Merah + Ayam Panggang' setelah diubah: 600 kkal
+-- Data tidak valid --
 [Gagal] Berat badan Dimas tidak valid: harus lebih dari 0.
+Berat badan Dimas tetap: 72 kg
+[Gagal] Kalori menu 'Oatmeal Buah' tidak valid: harus angka > 0.
+Kalori menu 'Oatmeal Buah' tetap: 300 kkal
+[Gagal] Nomor STR dr. Sari tidak valid: minimal 6 karakter.
+Nomor STR dr. Sari tetap: STR12345
 
-[9] Uji Inheritance (Akses Method Superclass - Private Data)
+[9] Uji Verifikasi Password (akses data private tanpa mengeksposnya)
 Password 'pass123' untuk Dimas benar? True
+Password 'salah' untuk Dimas benar?   False
+
+[10] Uji Relasi Agregasi (AhliGizi memiliki Pasien Binaan)
+[+] Dimas terdaftar sebagai pasien binaan dr. Sari
+[+] Andi terdaftar sebagai pasien binaan dr. Sari
+--- Pasien Binaan dr. Sari ---
+- Dimas (reguler)
+- Andi (atlet)
+
+[11] Uji Relasi Komposisi (Pasien memiliki Riwayat Kesehatan)
+--- Riwayat Kesehatan Dimas ---
+--- Catatan Kesehatan: Dimas (10-09-2026) ---
+Berat Badan Tercatat : 71 kg
+Catatan Tambahan     : Kontrol rutin bulanan
+--- Catatan Kesehatan: Dimas (10-10-2026) ---
+Berat Badan Tercatat : 72 kg
+Catatan Tambahan     : Berat naik 1 kg
+
+[12] Uji Inheritance: Superclass User & Subclass Pasien/AhliGizi
+Dimas | Kategori: reguler | Status: Aktif
+dr. Sari | Status: Aktif
+pasien1 adalah instance dari User?  True
+ahli1 adalah instance dari User?    True
+Pasien adalah subclass dari User?   True
+AhliGizi adalah subclass dari User? True
+Akun dr. Budi telah dinonaktifkan.
+0 pasien binaan telah dilepas dari dr. Budi.
 
 ============================================================
 DEMONSTRASI SELESAI

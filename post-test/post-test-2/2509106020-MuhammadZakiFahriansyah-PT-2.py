@@ -1,44 +1,43 @@
-class Pengguna:
-    """Superclass untuk semua pengguna sistem."""
-    def __init__(self, id_pengguna, nama, password):
-        # Protected attribute (bisa diakses subclass)
-        self._id_pengguna = id_pengguna
-        self.nama = nama
-        # Private attribute (hanya untuk superclass)
-        self.__password = password
+class User:
+    #Superclass untuk Pasien & AhliGizi
+    def __init__(self, nama, password):
+        self.nama = nama               # public
+        self._status_aktif = True      # protected
+        self.__password = password     # private
 
     def verifikasi_password(self, password_input):
         return password_input == self.__password
 
-    def tampilkan_profil(self):
-        """Method ini wajib di-override oleh subclass"""
-        pass
+    def nonaktifkan_akun(self):
+        self._status_aktif = False
+        print(f"Akun {self.nama} telah dinonaktifkan.")
+
+    def info_dasar(self):
+        status = "Aktif" if self._status_aktif else "Nonaktif"
+        print(f"{self.nama} | Status: {status}")
 
 
-class Pasien(Pengguna):
-    # Atribut Kelas
+class Pasien(User):
+    #Atribut Kelas
     nama_klinik = "Klinik Gizi Sehat Samarinda"
     total_pasien = 0
     kategori_valid = ["reguler", "atlet", "kondisi_medis"]
 
-    def __init__(self, id_pengguna, nama, password, berat_badan, tinggi_badan,
+    def __init__(self, id_pasien, nama, password, berat_badan, tinggi_badan,
                  riwayat_penyakit="Tidak ada", kategori="reguler"):
-        # 1. Menggunakan super() memanggil konstruktor parent
-        super().__init__(id_pengguna, nama, password)
-        
-        # 2. Atribut unik subclass & Protected/Private
+        super().__init__(nama, password)  # Inheritance
+        # Atribut public
+        self.id_pasien = id_pasien
         self.kategori = kategori if kategori in Pasien.kategori_valid else "reguler"
-        self._riwayat_penyakit = riwayat_penyakit # Protected
-        self.__berat_badan = berat_badan          # Private
-        self.__tinggi_badan = tinggi_badan        # Private
-
-        # 3. Wadah untuk Agregasi & Komposisi
-        self.menu_diet_harian = []    # Untuk menampung objek MenuDiet (Agregasi)
-        self.riwayat_catatan = []     # Untuk menampung objek CatatanKesehatan (Komposisi)
+        # Atribut private (khusus milik Pasien)
+        self.__berat_badan = berat_badan
+        self.__tinggi_badan = tinggi_badan
+        self.__riwayat_penyakit = riwayat_penyakit
+        self._riwayat_kesehatan = []
 
         Pasien.total_pasien += 1
 
-    # Getter & Setter
+    #Getter & Setter
     @property
     def berat_badan(self):
         return self.__berat_badan
@@ -63,16 +62,16 @@ class Pasien(Pengguna):
 
     @property
     def riwayat_penyakit(self):
-        return self._riwayat_penyakit
+        return self.__riwayat_penyakit
 
     @riwayat_penyakit.setter
     def riwayat_penyakit(self, nilai_baru):
         if not nilai_baru or nilai_baru.strip() == "":
             print(f"[Gagal] Riwayat penyakit {self.nama} tidak boleh kosong.")
         else:
-            self._riwayat_penyakit = nilai_baru
+            self.__riwayat_penyakit = nilai_baru
 
-    # Instance Method
+    #Instance Method
     def hitung_kebutuhan_kalori(self):
         kalori_dasar = 24 * self.__berat_badan
 
@@ -88,27 +87,31 @@ class Pasien(Pengguna):
               f"{kebutuhan_kalori:.0f} kkal/hari")
         return kebutuhan_kalori
 
-    # Relasi Agregasi (Objek dibuat di luar, dimasukkan ke sini)
-    def tambah_menu_harian(self, menu):
-        self.menu_diet_harian.append(menu)
-        print(f"Menu {menu.nama_menu} ditambahkan ke daftar {self.nama}.")
-
-    # Relasi Komposisi (Objek dideklarasikan eksklusif di dalam kelas ini)
-    def catat_kesehatan(self, tanggal, catatan_tambahan="-"):
-        catatan = CatatanKesehatan(self, tanggal, self.__berat_badan, catatan_tambahan)
-        self.riwayat_catatan.append(catatan)
-        print(f"Catatan kesehatan {self.nama} pada {tanggal} berhasil dibuat.")
-
-    # 4. Method Overriding
     def tampilkan_profil(self):
-        print(f"--- Profil Pasien: {self.nama} ({self._id_pengguna}) ---")
+        print(f"--- Profil Pasien: {self.nama} ({self.id_pasien}) ---")
         print(f"Kategori     : {self.kategori}")
         print(f"Berat Badan  : {self.__berat_badan} kg")
         print(f"Tinggi Badan : {self.__tinggi_badan} cm")
-        print(f"Riwayat      : {self._riwayat_penyakit}")
+        print(f"Riwayat      : {self.__riwayat_penyakit}")
         print(f"Klinik       : {Pasien.nama_klinik}")
 
-    # Class Method
+    def catat_riwayat_kesehatan(self, tanggal, berat_badan_tercatat, catatan_tambahan="-"):
+        catatan = CatatanKesehatan(self, tanggal, berat_badan_tercatat, catatan_tambahan)
+        self._riwayat_kesehatan.append(catatan)
+        return catatan
+
+    def tampilkan_riwayat_kesehatan(self):
+        print(f"--- Riwayat Kesehatan {self.nama} ---")
+        if not self._riwayat_kesehatan:
+            print("Belum ada catatan kesehatan.")
+        for catatan in self._riwayat_kesehatan:
+            catatan.tampilkan_catatan()
+
+    def info_dasar(self):
+        status = "Aktif" if self._status_aktif else "Nonaktif"
+        print(f"{self.nama} | Kategori: {self.kategori} | Status: {status}")
+
+    #Class Method
     @classmethod
     def dari_dict(cls, data):
         return cls(
@@ -122,47 +125,42 @@ class Pasien(Pengguna):
     def ganti_nama_klinik(cls, nama_baru):
         cls.nama_klinik = nama_baru
 
-    # Static Method
+    #Static Method
     @staticmethod
     def validasi_kategori(kategori):
         return kategori in Pasien.kategori_valid
 
 
-class AhliGizi(Pengguna):
-    # Atribut Kelas
+class AhliGizi(User):
+    #Atribut Kelas
     total_ahli_gizi = 0
     spesialisasi_valid = ["gizi_klinik", "gizi_olahraga", "gizi_anak"]
 
-    def __init__(self, id_pengguna, nama, password, spesialisasi, nomor_str):
-        # 1. Menggunakan super() memanggil konstruktor parent
-        super().__init__(id_pengguna, nama, password)
-        
-        # 2. Atribut unik & Protected
+    def __init__(self, id_ahli, nama, password, spesialisasi, nomor_str):
+        super().__init__(nama, password)  # Inheritance
+        self.id_ahli = id_ahli
         self.spesialisasi = (spesialisasi if spesialisasi in AhliGizi.spesialisasi_valid
                               else "gizi_klinik")
-        self._nomor_str = nomor_str
+
+        self.__nomor_str = nomor_str
+        # Agregasi
+        self._daftar_pasien_binaan = []
 
         AhliGizi.total_ahli_gizi += 1
 
-    # Getter & Setter
+    #Getter & Setter
     @property
     def nomor_str(self):
-        return self._nomor_str
+        return self.__nomor_str
 
     @nomor_str.setter
     def nomor_str(self, nilai_baru):
         if not nilai_baru or len(nilai_baru.strip()) < 6:
             print(f"[Gagal] Nomor STR {self.nama} tidak valid: minimal 6 karakter.")
         else:
-            self._nomor_str = nilai_baru
+            self.__nomor_str = nilai_baru
 
-    # 4. Method Overriding
-    def tampilkan_profil(self):
-        print(f"--- Profil Ahli Gizi: {self.nama} ({self._id_pengguna}) ---")
-        print(f"Spesialisasi : {self.spesialisasi}")
-        print(f"Nomor STR    : {self._nomor_str}")
-
-    # Instance Method (Relasi Asosiasi: Memakai objek Pasien & MenuDiet sementara)
+    #Instance Method
     def buat_rekomendasi(self, pasien, menu):
         kebutuhan = pasien.hitung_kebutuhan_kalori()
         print(f"--- Rekomendasi dari {self.nama} ({self.spesialisasi}) ---")
@@ -173,7 +171,30 @@ class AhliGizi(Pengguna):
             print(f"Menu '{menu.nama_menu}' ({menu.kalori} kkal) MELEBIHI "
                   f"kebutuhan kalori {pasien.nama}.")
 
-    # Class Method
+    def tampilkan_profil(self):
+        print(f"--- Profil Ahli Gizi: {self.nama} ({self.id_ahli}) ---")
+        print(f"Spesialisasi : {self.spesialisasi}")
+        print(f"Nomor STR    : {self.__nomor_str}")
+
+    def tambah_pasien_binaan(self, pasien):
+        if isinstance(pasien, Pasien):
+            self._daftar_pasien_binaan.append(pasien)
+            print(f"[+] {pasien.nama} terdaftar sebagai pasien binaan {self.nama}")
+
+    def tampilkan_pasien_binaan(self):
+        print(f"--- Pasien Binaan {self.nama} ---")
+        if not self._daftar_pasien_binaan:
+            print("Belum ada pasien binaan.")
+        for p in self._daftar_pasien_binaan:
+            print(f"- {p.nama} ({p.kategori})")
+
+    def nonaktifkan_akun(self):
+        super().nonaktifkan_akun()
+        jumlah = len(self._daftar_pasien_binaan)
+        self._daftar_pasien_binaan = []
+        print(f"{jumlah} pasien binaan telah dilepas dari {self.nama}.")
+
+    #Class Method
     @classmethod
     def dari_dict(cls, data):
         return cls(
@@ -181,14 +202,14 @@ class AhliGizi(Pengguna):
             data["spesialisasi"], data["nomor_str"],
         )
 
-    # Static Method
+    #Static Method
     @staticmethod
     def validasi_spesialisasi(spesialisasi):
         return spesialisasi in AhliGizi.spesialisasi_valid
 
 
 class MenuDiet:
-    # Atribut Kelas
+    #Atribut Kelas
     total_menu = 0
     kategori_menu_valid = ["sarapan", "makan_siang", "makan_malam", "camilan"]
 
@@ -198,10 +219,9 @@ class MenuDiet:
         self.kategori_menu = (kategori_menu if kategori_menu in
                                MenuDiet.kategori_menu_valid else "makan_siang")
         self.__kalori = kalori
-
         MenuDiet.total_menu += 1
 
-    # Getter & Setter
+    #Getter & Setter
     @property
     def kalori(self):
         return self.__kalori
@@ -213,13 +233,13 @@ class MenuDiet:
         else:
             self.__kalori = nilai_baru
 
-    # Instance Method
+    #Instance Method
     def tampilkan_menu(self):
         print(f"--- Menu: {self.nama_menu} ({self.kategori_menu}) ---")
         print(f"Bahan  : {', '.join(self.daftar_bahan)}")
         print(f"Kalori : {self.__kalori} kkal")
 
-    # Class Method
+    #Class Method
     @classmethod
     def dari_dict(cls, data):
         return cls(
@@ -227,14 +247,14 @@ class MenuDiet:
             data["kalori"], data.get("kategori_menu", "makan_siang"),
         )
 
-    # Static Method
+    #Static Method
     @staticmethod
     def validasi_kalori(nilai):
         return isinstance(nilai, (int, float)) and nilai > 0
 
 
 class CatatanKesehatan:
-    # Atribut Kelas
+    #Atribut Kelas
     total_catatan = 0
     format_tanggal = "DD-MM-YYYY"
 
@@ -243,10 +263,9 @@ class CatatanKesehatan:
         self.tanggal = tanggal
         self.catatan_tambahan = catatan_tambahan
         self.__berat_badan_tercatat = berat_badan_tercatat
-
         CatatanKesehatan.total_catatan += 1
 
-    # Getter & Setter
+    #Getter & Setter
     @property
     def berat_badan_tercatat(self):
         return self.__berat_badan_tercatat
@@ -258,31 +277,29 @@ class CatatanKesehatan:
         else:
             self.__berat_badan_tercatat = nilai_baru
 
-    # Instance Method
+    #Instance Method
     def tampilkan_catatan(self):
         print(f"--- Catatan Kesehatan: {self.pasien.nama} ({self.tanggal}) ---")
         print(f"Berat Badan Tercatat : {self.__berat_badan_tercatat} kg")
         print(f"Catatan Tambahan     : {self.catatan_tambahan}")
 
-    # Class Method
+    #Class Method
     @classmethod
     def rekap_total(cls):
         print(f"Total catatan kesehatan tercatat: {cls.total_catatan}")
         return cls.total_catatan
 
-    # Static Method
+    #Static Method
     @staticmethod
     def validasi_format_tanggal(tanggal_str):
         bagian = tanggal_str.split("-")
         return len(bagian) == 3 and all(b.isdigit() for b in bagian)
 
-
 if __name__ == "__main__":
     print("=" * 60)
     print("SISTEM INFORMASI GIZI - DEMONSTRASI PROGRAM")
     print("=" * 60)
-    
-    print("\n[1] Membuat objek Pasien & Uji Overriding")
+    print("\n[1] Membuat objek Pasien")
     pasien1 = Pasien("P001", "Dimas", "pass123", 70, 170, "Tidak ada", "reguler")
     data_pasien2 = {
         "id_pasien": "P002", "nama": "Rina", "password": "rina456",
@@ -290,43 +307,110 @@ if __name__ == "__main__":
         "riwayat_penyakit": "Diabetes", "kategori": "kondisi_medis",
     }
     pasien2 = Pasien.dari_dict(data_pasien2)
-    pasien1.tampilkan_profil() # Ter-override
+    pasien1.tampilkan_profil()
     pasien2.tampilkan_profil()
 
     print("\n[2] Membuat objek AhliGizi")
     ahli1 = AhliGizi("A001", "dr. Sari", "sari789", "gizi_klinik", "STR12345")
-    ahli1.tampilkan_profil() # Ter-override
+    data_ahli2 = {
+        "id_ahli": "A002", "nama": "dr. Budi", "password": "budi000",
+        "spesialisasi": "gizi_olahraga", "nomor_str": "STR67890",
+    }
+    ahli2 = AhliGizi.dari_dict(data_ahli2)
+
+    ahli1.tampilkan_profil()
+    ahli2.tampilkan_profil()
 
     print("\n[3] Membuat objek MenuDiet")
     menu1 = MenuDiet("Nasi Merah + Ayam Panggang",
                       ["nasi merah", "ayam", "brokoli"], 550, "makan_siang")
     menu2 = MenuDiet("Oatmeal Buah", ["oatmeal", "pisang", "madu"], 300, "sarapan")
 
-    print("\n[4] Uji Relasi Asosiasi (buat_rekomendasi)")
+    menu1.tampilkan_menu()
+    menu2.tampilkan_menu()
+
+    print("\n[4] Uji Instance Method: hitung_kebutuhan_kalori()")
     pasien1.hitung_kebutuhan_kalori()
+    pasien2.hitung_kebutuhan_kalori()
+
+    atlet1 = Pasien("P003", "Andi", "andi111", 80, 180, "Tidak ada", "atlet")
+    atlet1.hitung_kebutuhan_kalori()
+
+    print()
     ahli1.buat_rekomendasi(pasien1, menu1)
+    ahli2.buat_rekomendasi(pasien2, menu2)
 
-    print("\n[5] Uji Relasi Agregasi (Pasien & MenuDiet)")
-    pasien1.tambah_menu_harian(menu1)
-    pasien1.tambah_menu_harian(menu2)
-    
-    print("\n[6] Uji Relasi Komposisi (Pasien & CatatanKesehatan)")
-    pasien1.catat_kesehatan("01-09-2026", "Kondisi stabil")
-    pasien1.riwayat_catatan[0].tampilkan_catatan()
+    print("\n[5] Membuat objek CatatanKesehatan")
+    catatan1 = CatatanKesehatan(pasien1, "01-09-2026", 70, "Kondisi stabil")
+    catatan2 = CatatanKesehatan(pasien2, "05-09-2026", 54, "Berat turun 1 kg")
+    catatan1.tampilkan_catatan()
+    catatan2.tampilkan_catatan()
 
-    print("\n[7] Uji Class & Static Method")
-    Pasien.ganti_nama_klinik("Klinik Gizi Sehat Cabang Samarinda")
+    print("\n[6] Uji Class Method")
+    Pasien.ganti_nama_klinik("Klinik Gizi Sehat Cabang Samarinda Seberang")
+    print(f"Nama klinik terbaru       : {Pasien.nama_klinik}")
     print(f"Total pasien terdaftar    : {Pasien.total_pasien}")
-    print(f"Validasi kategori 'atlet' : {Pasien.validasi_kategori('atlet')}")
+    print(f"Total ahli gizi terdaftar : {AhliGizi.total_ahli_gizi}")
+    print(f"Total menu dibuat         : {MenuDiet.total_menu}")
+    CatatanKesehatan.rekap_total()
 
-    print("\n[8] Uji Setter (Encapsulation)")
+    print("\n[7] Uji Static Method")
+    print(f"Validasi kategori 'atlet'         : {Pasien.validasi_kategori('atlet')}")
+    print(f"Validasi kategori 'ngasal'        : {Pasien.validasi_kategori('ngasal')}")
+    print(f"Validasi spesialisasi 'gizi_anak' : {AhliGizi.validasi_spesialisasi('gizi_anak')}")
+    print(f"Validasi kalori 500               : {MenuDiet.validasi_kalori(500)}")
+    print(f"Validasi kalori -20               : {MenuDiet.validasi_kalori(-20)}")
+    print(f"Validasi tanggal '01-09-2026'      : "
+          f"{CatatanKesehatan.validasi_format_tanggal('01-09-2026')}")
+
+    print("\n[8] Uji Setter (Encapsulation & Validasi)")
+
+    print("-- Data valid --")
     pasien1.berat_badan = 72
     print(f"Berat badan {pasien1.nama} setelah diubah: {pasien1.berat_badan} kg")
-    pasien1.berat_badan = -5
 
-    print("\n[9] Uji Inheritance (Akses Method Superclass - Private Data)")
+    menu1.kalori = 600
+    print(f"Kalori menu '{menu1.nama_menu}' setelah diubah: {menu1.kalori} kkal")
+
+    print("-- Data tidak valid --")
+    pasien1.berat_badan = -5
+    print(f"Berat badan {pasien1.nama} tetap: {pasien1.berat_badan} kg")
+
+    menu2.kalori = -100
+    print(f"Kalori menu '{menu2.nama_menu}' tetap: {menu2.kalori} kkal")
+
+    ahli1.nomor_str = "abc"
+    print(f"Nomor STR {ahli1.nama} tetap: {ahli1.nomor_str}")
+
+    print("\n[9] Uji Verifikasi Password (akses data private tanpa mengeksposnya)")
     print(f"Password 'pass123' untuk {pasien1.nama} benar? "
           f"{pasien1.verifikasi_password('pass123')}")
+    print(f"Password 'salah' untuk {pasien1.nama} benar?   "
+          f"{pasien1.verifikasi_password('salah')}")
+
+    #  10. Uji Relasi Agregasi: AhliGizi <-> Pasien Binaan 
+    print("\n[10] Uji Relasi Agregasi (AhliGizi memiliki Pasien Binaan)")
+    ahli1.tambah_pasien_binaan(pasien1)
+    ahli1.tambah_pasien_binaan(atlet1)
+    ahli1.tampilkan_pasien_binaan()
+
+    #  11. Uji Relasi Komposisi: Pasien <-> Riwayat Kesehatan 
+    print("\n[11] Uji Relasi Komposisi (Pasien memiliki Riwayat Kesehatan)")
+    pasien1.catat_riwayat_kesehatan("10-09-2026", 71, "Kontrol rutin bulanan")
+    pasien1.catat_riwayat_kesehatan("10-10-2026", 72, "Berat naik 1 kg")
+    pasien1.tampilkan_riwayat_kesehatan()
+
+    #  12. Uji Inheritance: Superclass User & Subclass 
+    print("\n[12] Uji Inheritance: Superclass User & Subclass Pasien/AhliGizi")
+    pasien1.info_dasar()   # method overriding milik Pasien
+    ahli1.info_dasar()     # method bawaan milik User
+
+    print(f"pasien1 adalah instance dari User?  {isinstance(pasien1, User)}")
+    print(f"ahli1 adalah instance dari User?    {isinstance(ahli1, User)}")
+    print(f"Pasien adalah subclass dari User?   {issubclass(Pasien, User)}")
+    print(f"AhliGizi adalah subclass dari User? {issubclass(AhliGizi, User)}")
+
+    ahli2.nonaktifkan_akun()   # method overriding
 
     print("\n" + "=" * 60)
     print("DEMONSTRASI SELESAI")
