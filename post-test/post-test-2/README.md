@@ -4,13 +4,13 @@
 **NIM:** 2509106020  
 **Kelas:** A1'25  
 
-Post-test Praktikum Pemrograman Berorientasi Objek — mengimplementasikan konsep **Class & Object**, **Atribut & Method** (instance, class, static), **Encapsulation & Property**, serta **Inheritance & Relasi UML** pada studi kasus sebuah klinik gizi.
+Post-test Praktikum Pemrograman Berorientasi Objek mengimplementasikan konsep **Class & Object**, **Atribut & Method** (instance, class, static), **Encapsulation & Property**, serta **Inheritance & Relasi UML** pada studi kasus sebuah klinik gizi.
 
 ## Deskripsi Program
 
 Program ini mengelola data pasien, ahli gizi, menu diet, dan catatan kesehatan
 pada sebuah klinik gizi. Setiap class berdiri sendiri (tidak menggunakan
-inheritance) dan saling berinteraksi melalui objek — misalnya `AhliGizi`
+inheritance) dan saling berinteraksi melalui objek misalnya `AhliGizi`
 menerima objek `Pasien` dan `MenuDiet` untuk membuat rekomendasi, sedangkan
 `CatatanKesehatan` menyimpan objek `Pasien` sebagai salah satu atributnya.
 
