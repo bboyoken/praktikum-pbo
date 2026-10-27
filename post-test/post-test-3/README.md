@@ -1,4 +1,4 @@
-# Sistem Informasi Gizi — Post-test 3
+# Sistem Informasi Gizi
 
 **Nama:** Muhammad Zaki Fahriansyah  
 **NIM:** 2509106020  
@@ -114,7 +114,6 @@ model melalui relasi layanan dengan kelas domain yang dipakai.
 
 ![Class Diagram Sistem Informasi Gizi](diagram-posttest-3-terpadu.svg)
 
-Ekspor diagram dari draw.io yang digunakan sebagai acuan: [Untitled Diagram-Page-3.drawio (1).svg](<Untitled Diagram-Page-3.drawio (1).svg>).
 
 ---
 
@@ -227,126 +226,6 @@ python3 2509106020-MuhammadZakiFahriansyah-PT-3.py
 Program menjalankan demonstrasi objek, method, validasi setter, relasi, abstraksi,
 dan polimorfisme secara otomatis di dalam blok `if __name__ == "__main__"`.
 
----
-
-### Cuplikan Output Pengujian (Terminal)
-
-```text
-============================================================
-SISTEM INFORMASI GIZI - DEMONSTRASI PROGRAM
-============================================================
-
-[1] Membuat objek Pasien
---- Profil Pasien: Dimas (P001) ---
-Kategori     : reguler
-Berat Badan  : 70 kg
-Tinggi Badan : 170 cm
-Riwayat      : Tidak ada
-Klinik       : Klinik Gizi Sehat Samarinda
---- Profil Pasien: Rina (P002) ---
-Kategori     : kondisi_medis
-Berat Badan  : 55 kg
-Tinggi Badan : 160 cm
-Riwayat      : Diabetes
-Klinik       : Klinik Gizi Sehat Samarinda
-
-[2] Membuat objek AhliGizi
---- Profil Ahli Gizi: dr. Sari (A001) ---
-Spesialisasi : gizi_klinik
-Nomor STR    : STR12345
---- Profil Ahli Gizi: dr. Budi (A002) ---
-Spesialisasi : gizi_olahraga
-Nomor STR    : STR67890
-
-[3] Membuat objek MenuDiet
---- Menu: Nasi Merah + Ayam Panggang (makan_siang) ---
-Bahan  : nasi merah, ayam, brokoli
-Kalori : 550 kkal
---- Menu: Oatmeal Buah (sarapan) ---
-Bahan  : oatmeal, pisang, madu
-Kalori : 300 kkal
-
-[4] Uji Instance Method: hitung_kebutuhan_kalori()
-Kebutuhan kalori Dimas (reguler): 2310 kkal/hari
-Kebutuhan kalori Rina (kondisi_medis): 1584 kkal/hari
-Kebutuhan kalori Andi (atlet): 3264 kkal/hari
-
-Kebutuhan kalori Dimas (reguler): 2310 kkal/hari
---- Rekomendasi dari dr. Sari (gizi_klinik) ---
-Menu 'Nasi Merah + Ayam Panggang' (550 kkal) SESUAI untuk Dimas.
-Kebutuhan kalori Rina (kondisi_medis): 1584 kkal/hari
---- Rekomendasi dari dr. Budi (gizi_olahraga) ---
-Menu 'Oatmeal Buah' (300 kkal) SESUAI untuk Rina.
-
-[5] Membuat objek CatatanKesehatan
---- Catatan Kesehatan: Dimas (01-09-2026) ---
-Berat Badan Tercatat : 70 kg
-Catatan Tambahan     : Kondisi stabil
---- Catatan Kesehatan: Rina (05-09-2026) ---
-Berat Badan Tercatat : 54 kg
-Catatan Tambahan     : Berat turun 1 kg
-
-[6] Uji Class Method
-Nama klinik terbaru       : Klinik Gizi Sehat Cabang Samarinda Seberang
-Total pasien terdaftar    : 3
-Total ahli gizi terdaftar : 2
-Total menu dibuat         : 2
-Total catatan kesehatan tercatat: 2
-
-[7] Uji Static Method
-Validasi kategori 'atlet'         : True
-Validasi kategori 'ngasal'        : False
-Validasi spesialisasi 'gizi_anak' : True
-Validasi kalori 500               : True
-Validasi kalori -20               : False
-Validasi tanggal '01-09-2026'      : True
-
-[8] Uji Setter (Encapsulation & Validasi)
--- Data valid --
-Berat badan Dimas setelah diubah: 72 kg
-Kalori menu 'Nasi Merah + Ayam Panggang' setelah diubah: 600 kkal
--- Data tidak valid --
-[Gagal] Berat badan Dimas tidak valid: harus lebih dari 0.
-Berat badan Dimas tetap: 72 kg
-[Gagal] Kalori menu 'Oatmeal Buah' tidak valid: harus angka > 0.
-Kalori menu 'Oatmeal Buah' tetap: 300 kkal
-[Gagal] Nomor STR dr. Sari tidak valid: minimal 6 karakter.
-Nomor STR dr. Sari tetap: STR12345
-
-[9] Uji Verifikasi Password (akses data private tanpa mengeksposnya)
-Password 'pass123' untuk Dimas benar? True
-Password 'salah' untuk Dimas benar?   False
-
-[10] Uji Relasi Agregasi (AhliGizi memiliki Pasien Binaan)
-[+] Dimas terdaftar sebagai pasien binaan dr. Sari
-[+] Andi terdaftar sebagai pasien binaan dr. Sari
---- Pasien Binaan dr. Sari ---
-- Dimas (reguler)
-- Andi (atlet)
-
-[11] Uji Relasi Komposisi (Pasien memiliki Riwayat Kesehatan)
---- Riwayat Kesehatan Dimas ---
---- Catatan Kesehatan: Dimas (10-09-2026) ---
-Berat Badan Tercatat : 71 kg
-Catatan Tambahan     : Kontrol rutin bulanan
---- Catatan Kesehatan: Dimas (10-10-2026) ---
-Berat Badan Tercatat : 72 kg
-Catatan Tambahan     : Berat naik 1 kg
-
-[12] Uji Inheritance: Superclass User & Subclass Pasien/AhliGizi
-Dimas | Kategori: reguler | Status: Aktif
-dr. Sari | Spesialisasi: gizi_klinik | Status: Aktif
-pasien1 adalah instance dari User?  True
-ahli1 adalah instance dari User?    True
-Pasien adalah subclass dari User?   True
-AhliGizi adalah subclass dari User? True
-Akun dr. Budi telah dinonaktifkan.
-0 pasien binaan telah dilepas dari dr. Budi.
-
-============================================================
-DEMONSTRASI SELESAI
-============================================================
-```
 ---
 
 ## Struktur Repositori
