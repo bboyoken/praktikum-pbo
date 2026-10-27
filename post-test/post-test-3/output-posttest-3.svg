@@ -2,7 +2,7 @@
 <rect width="1120" height="630" rx="14" fill="#101820"/><rect width="1120" height="42" rx="14" fill="#202b36"/><circle cx="25" cy="21" r="7" fill="#ff605c"/><circle cx="49" cy="21" r="7" fill="#ffbd44"/><circle cx="73" cy="21" r="7" fill="#00ca4e"/><text x="560" y="27" text-anchor="middle" font-family="Segoe UI,Arial" font-size="15" fill="#d7e0e8">Output Program — Post-test 3</text>
 <g font-family="Consolas,Courier New,monospace" font-size="17" fill="#d8e4ee">
 <text x="35" y="90">[13] Bukti Abstract Base Class</text><text x="35" y="122">LayananKlinik tidak dapat dibuat: Can't instantiate abstract class</text><text x="35" y="150">LayananKlinik without an implementation for abstract methods</text><text x="35" y="178">'proses', 'validasi'</text>
-<text x="35" y="235">[14] Polimorfisme via Pewarisan</text><text x="35" y="267">Dimas | Kategori: reguler | Status: Aktif</text><text x="35" y="295">dr. Sari | Status: Aktif</text>
+<text x="35" y="235">[14] Polimorfisme via Pewarisan</text><text x="35" y="267">Dimas | Kategori: reguler | Status: Aktif</text><text x="35" y="295">dr. Sari | Spesialisasi: gizi_klinik | Status: Aktif</text>
 <text x="35" y="352">[15] Duck Typing Notifikasi</text><text x="35" y="384">[EMAIL ke dimas@mail.com] Jadwal konsultasi gizi telah tersedia.</text><text x="35" y="412">[SMS ke 081234567890] Jadwal konsultasi gizi telah tersedia.</text>
 <text x="35" y="469">[16] Method Konkret Abstract Class</text><text x="35" y="497">[Rekomendasi gizi] Kebutuhan kalori Dimas (reguler): 2376 kkal/hari</text><text x="35" y="525">[Pencatatan kesehatan] Catatan Dimas | 22-10-2026 | 72 kg</text>
 <text x="35" y="582">[17] Operator Overloading (__str__): Catatan Dimas | 22-10-2026 | 72 kg</text>
